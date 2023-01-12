@@ -1,5 +1,6 @@
 ﻿using BarberShop.Migrations;
 using BarberShop.Models;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Dapper;
 
 namespace BarberShop.Methods
 {
@@ -73,7 +75,7 @@ namespace BarberShop.Methods
                     + "\n1. Show most popular treatment."
                     + "\n2. Show percentage of customers gender."
                     + "\n3. Which barberer has most bookings?"
-                    + "\n4. Which costumer is most loyal?"
+                    + "\n4. Which is the top 3 most loyal customers?"
                     + "\n5. Return to main menu.");
 
 
@@ -89,10 +91,10 @@ namespace BarberShop.Methods
                         ShowPercentageOfCustomersGender();
                         break;
                     case '3':
-
+                        BarberMostBookings();
                         break;
                     case '4':
-
+                        TopThreeLoyalCustomer();
                         break;
                     case '5':
                         runMenu = true;
@@ -105,22 +107,75 @@ namespace BarberShop.Methods
             }
         }
 
+        private static void TopThreeLoyalCustomer()
+        {
+            using (var db = new BarberShopDbContext())
+            {
+                var mostPopularBarber = (from b in db.Bookings
+                                         join c in db.Customers on b.CustomerId equals c.Id
+                                         select new { CustomerName = c.Name, CustomerCount = b.CustomerId }).ToList().GroupBy(t => t.CustomerName);
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"\nYour top three most loyal customers and their amount of booking. \n");
+                Console.ResetColor();
+                foreach (var mpb in mostPopularBarber.OrderByDescending(t => t.Count()).Take(3))
+                {
+                    Console.WriteLine($"{mpb.Count()} \t {mpb.Key}");
+                }
+                Console.ReadLine();
+            }
+        }
+
+        private static void BarberMostBookings()
+        {
+            using (var db = new BarberShopDbContext())
+            {
+                var mostPopularBarber = (from b in db.Bookings
+                                        join ba in db.Barbers on b.BarberId equals ba.Id
+                                        select new { BarberName = ba.Name, BarberCount = b.BarberId }).ToList().GroupBy(t => t.BarberName);
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"\nBarbers booked customers in descending order. \n");
+                Console.ResetColor();
+                foreach (var mpb in mostPopularBarber.OrderByDescending(t => t.Count()))
+                {
+                    Console.WriteLine($"{mpb.Count()} \t {mpb.Key}");
+                }
+                Console.ReadLine();
+            }
+        }
+
         private static void ShowPercentageOfCustomersGender()
         {
             using (var db = new BarberShopDbContext())
             {
-                //var genderPercentage = db.Customers.ToList().SingleOrDefault();
-                Console.WriteLine($"\n \n");
-                foreach (var cus in db.Customers.GroupBy(c => c.Gender))
+                var percentageGender = (from c in db.Customers select c).ToList();
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"\nCustomers gender! \n");
+                Console.ResetColor();
+                float countMen = 0;
+                float countWomen = 0;
+                foreach (var p in percentageGender)
                 {
-                    Console.WriteLine($"{cus.Key}");
-                    foreach(var k in cus.Key)
+                    if (p.Gender == "Man")
                     {
-                        Console.WriteLine($"bla");
+                        countMen++;
+                    }
+                    else if (p.Gender == "Woman")
+                    {
+                        countWomen++;
                     }
                 }
+
+                float value = 92.197354542F;
+                value = (float)System.Math.Round(value, 2);
+
+                float percentageMan = (countMen / (countWomen + countMen)) * 100;
+                percentageMan = (float)System.Math.Round(percentageMan, 2);
+                float percentageWomen = 100 - percentageMan;
+                percentageWomen = (float)System.Math.Round(percentageWomen, 2);
+                Console.WriteLine($"{percentageMan}% is men and {percentageWomen}% is women.");
                 Console.ReadLine();
             }
+
         }
 
         private static void ShowMostPopularTreatment()
@@ -130,7 +185,9 @@ namespace BarberShop.Methods
                 var popularTreatment = (from b in db.Bookings
                                         join t in db.Treatments on b.TreatmentId equals t.Id
                                         select new { TreatmentName = t.Name, TreatmentCount = b.TreatmentId }).ToList().GroupBy(t => t.TreatmentName);
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"\nMost popular treatments! \n");
+                Console.ResetColor();
                 foreach (var pop in popularTreatment.OrderByDescending(t => t.Count()))
                 {
                     Console.WriteLine($"{pop.Count()} \t {pop.Key}");
@@ -159,11 +216,11 @@ namespace BarberShop.Methods
                 while (!failSafeWrongInputBarber)
                 {
                     whichBarber = HelpMethods.TryNumberInt();
-                    if (whichBarber == 2 || whichBarber == 3 || whichBarber == 4) 
-                    { 
+                    if (whichBarber == 2 || whichBarber == 3 || whichBarber == 4)
+                    {
                         failSafeWrongInputBarber = true;
                     }
-                    else 
+                    else
                     {
                         Console.WriteLine("There is no barber with that Id.");
                     }

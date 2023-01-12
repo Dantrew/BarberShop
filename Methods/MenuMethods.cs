@@ -293,7 +293,7 @@ namespace BarberShop.Methods
                 while (!failSafeWrongInputBarber)
                 {
                     whichBarber = HelpMethods.TryNumberInt();
-                    if (whichBarber == 2 || whichBarber == 3 || whichBarber == 4)   
+                    if (whichBarber == 2 || whichBarber == 3 || whichBarber == 4)
                     {
                         failSafeWrongInputBarber = true;
                     }
@@ -478,8 +478,26 @@ namespace BarberShop.Methods
             string customerName = Console.ReadLine();
             Console.Write("Last Name: ");
             string customerLastName = Console.ReadLine();
-            Console.Write("Gender Man or Woman: ");
-            string customerGender = Console.ReadLine();
+            Console.Write("Gender [1]Man or [2]Woman: ");
+            string customerGender = " ";
+            bool chooseRightNumber = false;
+            while (!chooseRightNumber)
+            {
+                int customerGenderChoise = HelpMethods.TryNumberInt();
+
+                if (customerGenderChoise == 1)
+                {
+                    customerGender = "Man";
+                    chooseRightNumber = true;
+                }
+                else if (customerGenderChoise == 2)
+                {
+                    customerGender = "Woman";
+                    chooseRightNumber = true;
+                }
+                else
+                    Console.WriteLine("Wrong input. See options above!");
+            }
             Console.Write("Birthday (YYYYMMDDXXXX): ");
             long customerBirthday = HelpMethods.TryNumberLong();
             Console.WriteLine("Phonenumber: ");
