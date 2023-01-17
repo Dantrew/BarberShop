@@ -8,6 +8,6 @@ namespace BarberShop.Models
 {
     internal class Barber : Person
     {
-
+        public int StartingSalary { get; set; }
     }
 }

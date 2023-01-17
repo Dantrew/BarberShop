@@ -413,7 +413,7 @@ namespace BarberShop.Methods
                     {
                         case '1':
                             Console.WriteLine("What is the new name");
-                            var newName = Console.ReadLine();
+                            var newName = HelpMethods.TryStringIn();
                             var treatment = db.Treatments.Where(x => x.Id == treatmentId).SingleOrDefault();
 
                             if (treatment != null)
@@ -456,7 +456,7 @@ namespace BarberShop.Methods
         private static void AddTreatment()
         {
             Console.Write("\n\nTreatment name: ");
-            string treatmentName = Console.ReadLine();
+            string treatmentName = HelpMethods.TryStringIn();
             Console.Write("Estimated treatment time in minutes: ");
             int treatmentTime = HelpMethods.TryNumberInt();
             Console.Write("Price in SEK: ");
@@ -561,7 +561,7 @@ namespace BarberShop.Methods
                     {
                         case '1':
                             Console.WriteLine("What is the new name?");
-                            var newName = Console.ReadLine();
+                            var newName = HelpMethods.TryStringIn();
                             var barber = db.Barbers.Where(x => x.Id == barberId).SingleOrDefault();
 
                             if (barber != null)
@@ -574,7 +574,7 @@ namespace BarberShop.Methods
 
                         case '2':
                             Console.WriteLine("What is the new last name?");
-                            var newLastName = Console.ReadLine();
+                            var newLastName = HelpMethods.TryStringIn();
                             barber = db.Barbers.Where(x => x.Id == barberId).SingleOrDefault();
                             if (barber != null)
                             {
@@ -608,9 +608,9 @@ namespace BarberShop.Methods
         private static void AddBarber()
         {
             Console.Write("\n\nFirst Name: ");
-            string barberName = Console.ReadLine();
+            string barberName = HelpMethods.TryStringIn();
             Console.Write("Last Name: ");
-            string barberLastName = Console.ReadLine();
+            string barberLastName = HelpMethods.TryStringIn();
             Console.Write("Phonenumber: ");
             long barberPhonenumber = HelpMethods.TryNumberLong();
 

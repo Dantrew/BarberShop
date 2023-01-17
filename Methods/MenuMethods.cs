@@ -160,7 +160,7 @@ namespace BarberShop.Methods
                     {
                         case '1':
                             Console.WriteLine("What is the new name?");
-                            var newName = Console.ReadLine();
+                            var newName = HelpMethods.TryStringIn();
                             var customerEdit = db.Customers.Where(x => x.Id == globalInlogId).SingleOrDefault();
 
                             if (customerEdit != null)
@@ -173,7 +173,7 @@ namespace BarberShop.Methods
 
                         case '2':
                             Console.WriteLine("What is the new last name?");
-                            var newLastName = Console.ReadLine();
+                            var newLastName = HelpMethods.TryStringIn();
                             customerEdit = db.Customers.Where(x => x.Id == globalInlogId).SingleOrDefault();
                             if (customerEdit != null)
                             {
@@ -475,9 +475,9 @@ namespace BarberShop.Methods
         {
 
             Console.Write("\n\nFirst Name: ");
-            string customerName = Console.ReadLine();
+            string customerName = HelpMethods.TryStringIn();
             Console.Write("Last Name: ");
-            string customerLastName = Console.ReadLine();
+            string customerLastName = HelpMethods.TryStringIn();
             Console.Write("Gender [1]Man or [2]Woman: ");
             string customerGender = " ";
             bool chooseRightNumber = false;

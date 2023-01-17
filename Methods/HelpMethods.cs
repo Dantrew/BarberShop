@@ -95,6 +95,26 @@ namespace BarberShop.Methods
             }
         }
 
+        internal static string TryStringIn()
+        {
+            bool correctInput = false;
+            string anyWord = null;
+
+            while (!correctInput)
+            {
+                anyWord = Console.ReadLine();
+                if (string.IsNullOrEmpty(anyWord))
+                {
+                    Console.WriteLine("Wrong input! Input can not be null.");
+                }
+                else
+                {
+                    correctInput = true;
+                }
+            }
+            return anyWord;
+        }
+
         internal static void InputInstructions()
         {
             Console.WriteLine("Wrong input. Try something else!");
